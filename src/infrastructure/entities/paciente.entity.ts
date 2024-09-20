@@ -1,7 +1,7 @@
-import { Column, Entity } from 'typeorm';
+import { Entity } from 'typeorm';
 import { ClienteEntity } from './cliente.entity';
 
 @Entity({
-  name: 'clientes',
+  name: 'pacientes',
 })
 export class PacienteEntity extends ClienteEntity {}

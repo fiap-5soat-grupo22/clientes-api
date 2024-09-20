@@ -11,6 +11,8 @@ import {
   DefaultValuePipe,
   Query,
   UseGuards,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { PacientesService } from './pacientes.service';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
@@ -23,19 +25,22 @@ import {
   ApiQuery,
   ApiParam,
   ApiBody,
+  ApiBasicAuth,
 } from '@nestjs/swagger';
 import { AcessoPublico } from '../../infrastructure/decorators/acesso-publico.decorators';
 import { Habilidade } from '../../domain/enums/habilidade.enum';
 import { Habilidades } from '../../infrastructure/decorators/habilidades.decorators';
 import { IdentityGuard } from '../../infrastructure/guards/identity/identity.guard';
+import { FastifyRequest } from 'fastify';
+import { Reply } from '../../infrastructure/interfaces/reply.interface';
 
 @Controller('pacientes')
 @ApiTags('Pacientes')
-@ApiBearerAuth()
 @UseGuards(IdentityGuard)
 export class PacientesController {
   @Inject()
   private readonly pacientesService: PacientesService;
+  medicosService: any;
 
   @ApiOperation({ description: 'Cadastra um novo paciente' })
   @ApiResponse({
@@ -57,27 +62,58 @@ export class PacientesController {
     return this.pacientesService.create(createPacienteDto);
   }
 
+  @ApiOperation({ description: 'Autentica um paciente com email e senha' })
+  @ApiResponse({
+    status: 201,
+    description: 'Access Token gerado.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Dados informados na requisição inválidos',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Sistema indisponível',
+  })
+  @AcessoPublico()
+  @ApiBasicAuth('basic')
+  @Version('1')
+  @Post('/oauth2/access-token')
+  accessTokenV1(@Req() request: FastifyRequest, @Res() response: Reply) {
+    return this.pacientesService.authenticate(request, response);
+  }
+
   @ApiOperation({ description: 'Listagem dos pacientes cadastrados' })
   @ApiQuery({
     name: 'skip',
     required: false,
-    description: 'Início da paginação',
+    example: 0,
+    description: `
+    Início da paginação
+    `,
   })
   @ApiQuery({
     name: 'take',
     required: false,
-    description: 'Quantidade de registros por página',
+    example: 10,
+    description: `
+    Quantidade de registros por página
+  `,
   })
   @ApiQuery({
     name: 'fields',
     required: false,
-    description: 'Campos retornados, separados por virgula. Ex: nome,crm',
+    example: 'nome,email,cpf,habilidades',
+    description: `
+    Campos retornados, separados por virgula. Ex: nome,email
+    `,
   })
   @ApiQuery({
     name: 'filters',
     required: false,
-    description:
-      'Campos de filtros, no formato chave valor separados por vírgulas. Ex: nome=joao ',
+    description: `
+      Campos de filtros, no formato chave valor separados por vírgulas. Ex: nome=joao
+      `,
   })
   @ApiResponse({
     status: 200,
@@ -95,6 +131,7 @@ export class PacientesController {
     status: 500,
     description: 'Sistema indisponível',
   })
+  @ApiBearerAuth()
   @Habilidades(Habilidade.Paciente, Habilidade.Medico)
   @Version('1')
   @Get()
@@ -112,7 +149,10 @@ export class PacientesController {
   @ApiQuery({
     name: 'fields',
     required: false,
-    description: 'Campos retornados, separados por virgula. Ex: nome,crm',
+    example: 'nome,email,cpf,habilidades',
+    description: `
+    Campos retornados, separados por virgula. Ex: nome,email
+    `,
   })
   @ApiResponse({
     status: 200,
@@ -130,6 +170,7 @@ export class PacientesController {
     status: 500,
     description: 'Sistema indisponível',
   })
+  @ApiBearerAuth()
   @Habilidades(Habilidade.Paciente, Habilidade.Medico)
   @Version('1')
   @Get(':uid')
@@ -142,7 +183,7 @@ export class PacientesController {
 
   @ApiOperation({ description: 'Altera informações cadatrais de um paciente' })
   @ApiParam({ name: 'uid', required: true, description: 'Código do paciente' })
-  @ApiBody({ type: CreatePacienteDto })
+  @ApiBody({ type: UpdatePacienteDto })
   @ApiResponse({
     status: 200,
     description: 'Sucesso na atualização do paciente.',
@@ -163,6 +204,7 @@ export class PacientesController {
     status: 500,
     description: 'Sistema indisponível',
   })
+  @ApiBearerAuth()
   @Habilidades(Habilidade.Paciente)
   @Version('1')
   @Patch(':uid')
@@ -195,6 +237,7 @@ export class PacientesController {
     status: 500,
     description: 'Sistema indisponível',
   })
+  @ApiBearerAuth()
   @Habilidades(Habilidade.Paciente)
   @Version('1')
   @Delete(':uid')

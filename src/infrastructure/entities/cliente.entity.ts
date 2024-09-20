@@ -1,9 +1,5 @@
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
-import { TipoCliente } from '../../domain/enums/tipo-cliente.enum';
+import { Column, ObjectIdColumn } from 'typeorm';
 
-@Entity({
-  name: 'clientes',
-})
 export class ClienteEntity {
   @ObjectIdColumn()
   uid: string;
@@ -22,9 +18,6 @@ export class ClienteEntity {
 
   @Column()
   habilidades: string[];
-
-  @Column()
-  tipo: TipoCliente;
 
   @Column()
   ativo: boolean;

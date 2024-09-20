@@ -2,14 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RouterModule } from '@nestjs/core';
-import { AutenticacaoModule } from './usecases/autenticacao/autenticacao.module';
 import { MedicosModule } from './usecases/medicos/medicos.module';
 import { MedicoEntity } from './infrastructure/entities/medico.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ClienteEntity } from './infrastructure/entities/cliente.entity';
-import { AutenticacaoEntity } from './infrastructure/entities/autenticacao.entity';
 import { PacientesModule } from './usecases/pacientes/pacientes.module';
 import { PacienteEntity } from './infrastructure/entities/paciente.entity';
+import { AutenticacaoService } from './infrastructure/services/autenticacao/autenticacao.service';
 
 @Module({
   imports: [
@@ -21,20 +19,12 @@ import { PacienteEntity } from './infrastructure/entities/paciente.entity';
       authSource: 'admin',
       autoLoadEntities: true,
     }),
-    TypeOrmModule.forFeature(
-      [MedicoEntity, ClienteEntity, PacienteEntity, AutenticacaoEntity],
-      'clientes',
-    ),
-    AutenticacaoModule,
+    TypeOrmModule.forFeature([MedicoEntity, PacienteEntity], 'clientes'),
     MedicosModule,
     RouterModule.register([
       {
         path: '/',
         children: [
-          {
-            path: '/',
-            module: AutenticacaoModule,
-          },
           {
             path: '/',
             module: MedicosModule,
@@ -49,6 +39,6 @@ import { PacienteEntity } from './infrastructure/entities/paciente.entity';
     PacientesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AutenticacaoService],
 })
 export class AppModule {}

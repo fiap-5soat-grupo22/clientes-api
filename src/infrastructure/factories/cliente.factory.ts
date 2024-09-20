@@ -5,7 +5,6 @@ import { IFactory } from '../interfaces/factory.interface';
 
 @Injectable()
 export class ClienteFactory implements IFactory<Cliente, ClienteEntity> {
-
   toEntity(domain: Cliente): ClienteEntity {
     const entity: ClienteEntity = new ClienteEntity();
 
@@ -15,7 +14,6 @@ export class ClienteFactory implements IFactory<Cliente, ClienteEntity> {
     entity.nome = domain?.nome;
     entity.cpf = domain?.cpf;
     entity.habilidades = domain?.habilidades;
-    entity.tipo = domain?.tipo;
     entity.ativo = domain?.ativo;
 
     return domain;
@@ -30,9 +28,7 @@ export class ClienteFactory implements IFactory<Cliente, ClienteEntity> {
     domain.nome = entity?.nome;
     domain.cpf = entity?.cpf;
     domain.habilidades = entity?.habilidades;
-    domain.tipo = entity?.tipo;
     domain.ativo = entity?.ativo;
-
 
     return domain;
   }

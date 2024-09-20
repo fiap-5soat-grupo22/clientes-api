@@ -1,5 +1,3 @@
-import { TipoCliente } from './enums/tipo-cliente.enum';
-
 export class Cliente {
   uid: string;
   identity: string;
@@ -7,6 +5,5 @@ export class Cliente {
   nome: string;
   cpf: string;
   habilidades: string[];
-  tipo: TipoCliente;
   ativo: boolean;
 }

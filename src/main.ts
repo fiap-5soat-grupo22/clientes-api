@@ -61,7 +61,12 @@ async function bootstrap() {
     .setTitle('Health&Med - Clientes API')
     .setDescription(
       `
-      Conjunto de recursos e operações para gestão dos clientes da operadora Health&Med
+      🎯Conjunto de recursos e operações para gestão dos clientes da operadora de plano de saúde Health&Med
+      
+      📕 Algumas dicas:
+        👉 As operações POST /v1/medicos e POST /v1/pacientes não necessitam de autenticação
+        👉 As operações POST /v1/medicos/oauth2/access-token e POST /v1/pacientes/oauth2/access-token utilizam o tipo de autenticação Basic (email e senha)
+        👉 As demais operações necessitam de um Access Token que pode ser obtido nas operações mencionadas acima
       `,
     )
     .addBearerAuth({
@@ -80,7 +85,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
 
-  SwaggerModule.setup('api', app, document, {
+  SwaggerModule.setup('docs', app, document, {
     explorer: false,
     swaggerUrl: 'docs',
   });

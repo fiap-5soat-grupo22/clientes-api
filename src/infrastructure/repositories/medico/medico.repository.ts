@@ -94,6 +94,8 @@ export class MedicoRepository implements IMedicosRepository {
       { upsert: false },
     );
 
+    console.info(resultado);
+
     return resultado.modifiedCount == 1 && resultado.matchedCount == 1;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

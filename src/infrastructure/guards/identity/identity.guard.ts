@@ -1,23 +1,26 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
-import { IdentityService } from '../../services/identity/identity.service';
 import { Habilidade } from '../../../domain/enums/habilidade.enum';
 import { HABILIDADES_KEY } from '../../decorators/habilidades.decorators';
 import { Cliente } from '../../../domain/cliente.model';
 import { IS_PUBLIC_KEY } from '../../decorators/acesso-publico.decorators';
+import { IdentityRepository } from '../../repositories/identity/identity.repository';
 
 @Injectable()
 export class IdentityGuard implements CanActivate {
-  constructor(
-    private identityService: IdentityService,
-    private reflector: Reflector,
-  ) {}
+  @Inject()
+  private identityRepository: IdentityRepository;
+
+  @Inject()
+  private reflector: Reflector;
 
   canActivate(
     context: ExecutionContext,
@@ -39,23 +42,23 @@ export class IdentityGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Nenhum token informado');
     }
-
-    return this.identityService
+    return this.identityRepository
       .verifyIdToken(token)
       .then((cliente: Cliente) => {
         request['cliente'] = cliente;
-
-        console.info(cliente);
-
         return this.hasHabilidade(
           cliente['habilidades'] as Array<string>,
           roles,
         );
       })
-      .catch(() => {
-        throw new UnauthorizedException();
+      .catch((error) => {
+        if (error instanceof ForbiddenException) {
+          throw error;
+        } else {
+          throw new UnauthorizedException(error.toString() || 'Token inválido');
+        }
       });
   }
 
@@ -77,18 +80,15 @@ export class IdentityGuard implements CanActivate {
     }
 
     /** FOR e não forEach por razões de performance */
-    console.time('hasHabilidade');
     for (let i = 0; i < allowedHabilidades.length; i++) {
       for (let k = 0; k < userHabilidades.length; k++) {
         // eslint-disable-next-line security/detect-object-injection
         if (allowedHabilidades[i].toString() === userHabilidades[k]) {
-          console.timeEnd('hasHabilidade');
           return true;
         }
       }
     }
-    console.timeEnd('hasHabilidade');
 
-    throw 'feature not allowed to this user';
+    throw new ForbiddenException('feature not allowed to this user');
   }
 }

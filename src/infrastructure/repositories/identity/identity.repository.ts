@@ -1,16 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import {
+  DecodedIdToken,
   FirebaseAuthError,
   getAuth as getAuthAdmin,
   UserRecord,
 } from 'firebase-admin/auth';
+
+import {
+  getAuth as getAuthApp,
+  signInWithEmailAndPassword,
+  UserCredential,
+} from 'firebase/auth';
 import { Cliente } from '../../../domain/cliente.model';
-import { IClientesRepository } from '../../../usecases/clientes/clientes.interface';
+import { IAutenticacaoRepository } from '../../../usecases/interfaces/autenticacao.interface';
 
 @Injectable()
-export class IdentityRepository implements IClientesRepository {
-  constructor() {}
-
+export class IdentityRepository implements IAutenticacaoRepository {
   async createWithPassword(domain: Cliente, password: string): Promise<string> {
     const userRecord: UserRecord = await getAuthAdmin().createUser({
       email: domain.email,
@@ -41,7 +46,9 @@ export class IdentityRepository implements IClientesRepository {
     customClains: object,
   ): Promise<boolean> {
     try {
-      await getAuthAdmin().setCustomUserClaims(uid, customClains);
+      await getAuthAdmin().setCustomUserClaims(uid, {
+        cliente: customClains,
+      });
       return true;
     } catch (error) {
       console.error(error);
@@ -61,6 +68,7 @@ export class IdentityRepository implements IClientesRepository {
   findOne(uid: string): Promise<Cliente> {
     throw new Error('Method not implemented.');
   }
+
   async update(uid: string, entity: Cliente): Promise<boolean> {
     await getAuthAdmin().updateUser(uid, {
       displayName: entity.nome,
@@ -76,17 +84,33 @@ export class IdentityRepository implements IClientesRepository {
     throw 'Método não implementado';
   }
 
-  fromUserRecord(entity: UserRecord): Cliente {
+  async signInWithEmailAndPassword(
+    email: string,
+    password: string,
+  ): Promise<string> {
+    const userCredential: UserCredential = await signInWithEmailAndPassword(
+      getAuthApp(),
+      email,
+      password,
+    );
+    return userCredential.user.getIdToken();
+  }
+
+  async verifyIdToken(token: string): Promise<Cliente> {
+    const decoded: DecodedIdToken = await getAuthAdmin().verifyIdToken(token);
+    return this.fromUserRecord(decoded);
+  }
+
+  private fromUserRecord(entity: UserRecord | DecodedIdToken): Cliente {
     const domain: Cliente = new Cliente();
 
     domain.email = entity.email;
     domain.nome = entity.displayName;
     domain.identity = entity.uid;
     domain.ativo = !entity.disabled;
-    domain.cpf = entity.customClaims.cliente['cpf'];
-    domain.habilidades = entity.customClaims.cliente['habilidades'];
-    domain.tipo = entity.customClaims.cliente['tipo'];
-    domain.uid = entity.customClaims.cliente['uid'];
+    domain.cpf = entity['cliente']['cpf'];
+    domain.habilidades = entity['cliente']['habilidades'];
+    domain.uid = entity['cliente']['uid'];
 
     return domain;
   }

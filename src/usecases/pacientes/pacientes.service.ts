@@ -1,19 +1,30 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
 import { Paciente } from '../../domain/paciente.model';
 import { IdentityRepository } from '../../infrastructure/repositories/identity/identity.repository';
 import { Habilidade } from '../../domain/enums/habilidade.enum';
 import { PacienteRepository } from '../../infrastructure/repositories/paciente/paciente.repository';
-import { TipoCliente } from '../../domain/enums/tipo-cliente.enum';
+import { FastifyRequest } from 'fastify';
+import { Reply } from '../../infrastructure/interfaces/reply.interface';
+import { AutenticacaoService } from '../../infrastructure/services/autenticacao/autenticacao.service';
 
 @Injectable()
 export class PacientesService {
   @Inject()
-  private identityRepository: IdentityRepository;
+  private readonly identityRepository: IdentityRepository;
 
   @Inject()
-  private pacienteRepository: PacienteRepository;
+  private readonly pacienteRepository: PacienteRepository;
+
+  @Inject()
+  private readonly autenticacaoService: AutenticacaoService;
 
   async create(createPacienteDto: CreatePacienteDto) {
     const entity: Paciente = this.toDomain(createPacienteDto);
@@ -39,11 +50,11 @@ export class PacientesService {
 
     entity.ativo = true;
     entity.habilidades = [Habilidade.Paciente];
-    entity.tipo = TipoCliente.Paciente;
     const uid = await this.pacienteRepository.create(entity);
 
     await this.identityRepository.setCustomUserClaims(entity.identity, {
-      paciente: { ...entity },
+      uid,
+      ...entity,
     });
 
     return uid;
@@ -60,12 +71,10 @@ export class PacientesService {
   async update(uid: string, dto: UpdatePacienteDto) {
     let paciente: Paciente = this.toDomain(dto);
 
-    paciente.uid = uid;
-
     const resultado = await this.pacienteRepository.update(uid, paciente);
 
     if (!resultado) {
-      throw new BadRequestException('paciente não encontrado');
+      throw new NotFoundException('paciente não encontrado');
     }
 
     paciente = await this.findOne(
@@ -90,7 +99,7 @@ export class PacientesService {
     const paciente: Paciente = await this.findOne(uid, 'identity');
 
     if (!paciente) {
-      throw new BadRequestException('paciente não encontrado');
+      throw new NotFoundException('paciente não encontrado');
     }
 
     const resultado: boolean = await this.pacienteRepository.update(
@@ -115,5 +124,28 @@ export class PacientesService {
     entity.cpf = dto.cpf;
 
     return entity;
+  }
+
+  async authenticate(
+    request: FastifyRequest,
+    response: Reply,
+  ): Promise<object> {
+    const header = request.headers['authorization'];
+
+    const [email, senha] = this.autenticacaoService.extractCredentials(header);
+
+    if (!email || !senha)
+      throw new UnauthorizedException('Credenciais não informadas');
+
+    const token = await this.identityRepository.signInWithEmailAndPassword(
+      email,
+      senha,
+    );
+
+    const cliente: Paciente = await this.pacienteRepository.findByEmail(email);
+    const config = this.autenticacaoService.cookiesConfig(token, cliente);
+    this.autenticacaoService.setCookiesResponse(request, response, config);
+
+    return config;
   }
 }

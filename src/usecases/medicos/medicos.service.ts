@@ -1,4 +1,10 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
@@ -6,14 +12,20 @@ import { IdentityRepository } from '../../infrastructure/repositories/identity/i
 import { MedicoRepository } from '../../infrastructure/repositories/medico/medico.repository';
 import { Medico } from '../../domain/medico.model';
 import { Habilidade } from '../../domain/enums/habilidade.enum';
-import { TipoCliente } from '../../domain/enums/tipo-cliente.enum';
+import { AutenticacaoService } from '../../infrastructure/services/autenticacao/autenticacao.service';
+import { FastifyRequest } from 'fastify';
+import { Reply } from '../../infrastructure/interfaces/reply.interface';
 
 @Injectable()
 export class MedicosService {
   @Inject()
-  private identityRepository: IdentityRepository;
+  private readonly identityRepository: IdentityRepository;
+
   @Inject()
-  private medicoRepository: MedicoRepository;
+  private readonly medicoRepository: MedicoRepository;
+
+  @Inject()
+  private readonly autenticacaoService: AutenticacaoService;
 
   async create(dto: CreateMedicoDto): Promise<string> {
     const medico: Medico = this.toDomain(dto);
@@ -39,12 +51,12 @@ export class MedicosService {
 
     medico.ativo = true;
     medico.habilidades = [Habilidade.Medico];
-    medico.tipo = TipoCliente.Medico;
 
     const uid = await this.medicoRepository.create(medico);
 
     await this.identityRepository.setCustomUserClaims(medico.identity, {
-      cliente: { ...medico },
+      uid,
+      ...medico,
     });
 
     return uid;
@@ -61,18 +73,18 @@ export class MedicosService {
   async update(uid: string, dto: UpdateMedicoDto) {
     let medico: Medico = this.toDomain(dto);
 
-    medico.uid = uid;
-
     const resultado = await this.medicoRepository.update(uid, medico);
 
     if (!resultado) {
-      throw new BadRequestException('médico não encontrado');
+      throw new NotFoundException('médico não encontrado');
     }
 
     medico = await this.findOne(
       uid,
       'identity,ativo,nome,email,cpf,habilidades,crm',
     );
+
+    console.info(medico);
 
     await this.identityRepository.update(medico.identity, medico);
 
@@ -91,7 +103,7 @@ export class MedicosService {
     const medico: Medico = await this.findOne(uid, 'identity');
 
     if (!medico) {
-      throw new BadRequestException('médico não encontrado');
+      throw new NotFoundException('médico não encontrado');
     }
 
     const resultado: boolean = await this.medicoRepository.update(uid, medico);
@@ -103,6 +115,30 @@ export class MedicosService {
     medico.ativo = false;
 
     this.identityRepository.update(medico.identity, medico);
+  }
+
+  async authenticate(
+    request: FastifyRequest,
+    response: Reply,
+  ): Promise<object> {
+    const header = request.headers['authorization'];
+
+    const [email, senha] = this.autenticacaoService.extractCredentials(header);
+
+    if (!email || !senha)
+      throw new UnauthorizedException('Credenciais não informadas');
+
+    const token = await this.identityRepository.signInWithEmailAndPassword(
+      email,
+      senha,
+    );
+
+    const cliente: Medico = await this.medicoRepository.findByEmail(email);
+
+    const config = this.autenticacaoService.cookiesConfig(token, cliente);
+    this.autenticacaoService.setCookiesResponse(request, response, config);
+
+    return config;
   }
 
   private toDomain(dto: CreateMedicoDto | UpdateMedicoDto): Medico {
