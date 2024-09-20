@@ -11,4 +11,4 @@ jobs:
     with:
       tenant : ${{ fromJSON(vars.HACKATHON).tenant }}
       config : ${{ toJSON(fromJSON(vars.HACKATHON).production) }}
-      service: ${{ toJSON(fromJSON(vars.HACKATHON).production.applications.gestao_acesso_api) }}
+      service: ${{ toJSON(fromJSON(vars.HACKATHON).production.applications.clientes_api) }}
