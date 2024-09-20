@@ -1,4 +1,4 @@
-name: 'Hackathon'
+name: 'Clientes API'
 on:
   push:
   workflow_dispatch:  
@@ -6,7 +6,7 @@ permissions:
   id-token: write
   contents: write  
 jobs:
-  deploy:
+  clientes_api:
     uses: fiap-5soat-grupo22/workflows-templates/.github/workflows/cloud-run.yml@main
     with:
       tenant : ${{ fromJSON(vars.HACKATHON).tenant }}
