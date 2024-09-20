@@ -1,0 +1,14 @@
+name: 'Hackathon'
+on:
+  push:
+  workflow_dispatch:  
+permissions:
+  id-token: write
+  contents: write  
+jobs:
+  porto-bank:
+    uses: fiap-5soat-grupo22/workflows-templates/.github/workflows/cloud-run.yml@main
+    with:
+      tenant : ${{ fromJSON(vars.HACKATHON).tenant }}
+      config : ${{ toJSON(fromJSON(vars.HACKATHON).production) }}
+      service: ${{ toJSON(fromJSON(vars.HACKATHON).production.applications.gestao_acesso_api) }}
