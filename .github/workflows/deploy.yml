@@ -6,7 +6,7 @@ permissions:
   id-token: write
   contents: write  
 jobs:
-  porto-bank:
+  deploy:
     uses: fiap-5soat-grupo22/workflows-templates/.github/workflows/cloud-run.yml@main
     with:
       tenant : ${{ fromJSON(vars.HACKATHON).tenant }}
