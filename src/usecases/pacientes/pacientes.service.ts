@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
-import { Paciente } from '../../domain/paciente.model';
+import { Paciente } from '../../domain/models/paciente.model';
 import { IdentityRepository } from '../../infrastructure/repositories/identity/identity.repository';
 import { Habilidade } from '../../domain/enums/habilidade.enum';
 import { PacienteRepository } from '../../infrastructure/repositories/paciente/paciente.repository';

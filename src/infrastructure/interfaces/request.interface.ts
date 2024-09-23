@@ -1,5 +1,5 @@
 import { FastifyRequest } from 'fastify';
-import { Cliente } from '../../domain/cliente.model';
+import { Cliente } from '../../domain/models/cliente.model';
 
 export interface Request extends FastifyRequest {
   getCookies(): object;

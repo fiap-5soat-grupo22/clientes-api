@@ -8,6 +8,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PacientesModule } from './usecases/pacientes/pacientes.module';
 import { PacienteEntity } from './infrastructure/entities/paciente.entity';
 import { AutenticacaoService } from './infrastructure/services/autenticacao/autenticacao.service';
+import { EventRepository } from './infrastructure/repositories/event/event.repository';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ComunicacaoModule } from './usecases/comunicacao/comunicacao.module';
 
 @Module({
   imports: [
@@ -20,7 +23,6 @@ import { AutenticacaoService } from './infrastructure/services/autenticacao/aute
       autoLoadEntities: true,
     }),
     TypeOrmModule.forFeature([MedicoEntity, PacienteEntity], 'clientes'),
-    MedicosModule,
     RouterModule.register([
       {
         path: '/',
@@ -36,9 +38,12 @@ import { AutenticacaoService } from './infrastructure/services/autenticacao/aute
         ],
       },
     ]),
+    MedicosModule,
     PacientesModule,
+    ComunicacaoModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService, AutenticacaoService],
+  providers: [AppService, AutenticacaoService, EventRepository],
 })
 export class AppModule {}

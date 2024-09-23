@@ -1,4 +1,4 @@
-import { Medico } from '../../domain/medico.model';
+import { Medico } from '../../domain/models/medico.model';
 import { MedicoEntity } from '../entities/medico.entity';
 import { Injectable } from '@nestjs/common';
 import { IFactory } from '../interfaces/factory.interface';

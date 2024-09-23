@@ -10,7 +10,7 @@ import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
 import { IdentityRepository } from '../../infrastructure/repositories/identity/identity.repository';
 import { MedicoRepository } from '../../infrastructure/repositories/medico/medico.repository';
-import { Medico } from '../../domain/medico.model';
+import { Medico } from '../../domain/models/medico.model';
 import { Habilidade } from '../../domain/enums/habilidade.enum';
 import { AutenticacaoService } from '../../infrastructure/services/autenticacao/autenticacao.service';
 import { FastifyRequest } from 'fastify';
@@ -83,8 +83,6 @@ export class MedicosService {
       uid,
       'identity,ativo,nome,email,cpf,habilidades,crm',
     );
-
-    console.info(medico);
 
     await this.identityRepository.update(medico.identity, medico);
 

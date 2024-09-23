@@ -4,7 +4,7 @@ import { MedicosService } from './medicos.service';
 import { IdentityRepository } from '../../infrastructure/repositories/identity/identity.repository';
 import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
-import { Medico } from '../../domain/medico.model';
+import { Medico } from '../../domain/models/medico.model';
 import { ClienteRepository } from '../../infrastructure/repositories/medico/medico.repository';
 
 describe('MedicoService', () => {

@@ -1,4 +1,4 @@
-import { Paciente } from '../../domain/paciente.model';
+import { Paciente } from '../../domain/models/paciente.model';
 import { IRepository } from '../../infrastructure/interfaces/repository.interface';
 
 export interface IPacientesRepository extends IRepository<Paciente, string> {

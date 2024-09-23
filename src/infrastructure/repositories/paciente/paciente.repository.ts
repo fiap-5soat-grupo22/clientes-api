@@ -4,7 +4,7 @@ import { DataSource, FindOptionsSelect, MongoRepository } from 'typeorm';
 import { UpdateResult, Document, ObjectId } from 'mongodb';
 import { CommonsService } from '../../services/commons/commons.service';
 import { IPacientesRepository } from '../../../usecases/pacientes/pacientes.interface';
-import { Paciente } from '../../../domain/paciente.model';
+import { Paciente } from '../../../domain/models/paciente.model';
 import { PacienteEntity } from '../../entities/paciente.entity';
 import { PacienteFactory } from '../../factories/paciente.factory';
 

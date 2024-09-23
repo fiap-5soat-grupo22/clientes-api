@@ -1,4 +1,4 @@
-import { Cliente } from '../../domain/cliente.model';
+import { Cliente } from '../../domain/models/cliente.model';
 import { ClienteEntity } from '../entities/cliente.entity';
 import { Injectable } from '@nestjs/common';
 import { IFactory } from '../interfaces/factory.interface';

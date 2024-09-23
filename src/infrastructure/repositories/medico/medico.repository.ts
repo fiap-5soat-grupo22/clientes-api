@@ -5,7 +5,7 @@ import { MedicoEntity } from '../../entities/medico.entity';
 import { IMedicosRepository } from '../../../usecases/medicos/medicos.interface';
 import { UpdateResult, Document, ObjectId } from 'mongodb';
 import { MedicoFactory } from '../../factories/medico.factory';
-import { Medico } from '../../../domain/medico.model';
+import { Medico } from '../../../domain/models/medico.model';
 import { CommonsService } from '../../services/commons/commons.service';
 
 @Injectable()

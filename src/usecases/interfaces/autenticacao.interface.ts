@@ -1,5 +1,5 @@
-import { Medico } from '../../domain/medico.model';
-import { Paciente } from '../../domain/paciente.model';
+import { Medico } from '../../domain/models/medico.model';
+import { Paciente } from '../../domain/models/paciente.model';
 
 export interface IAutenticacaoRepository {
   createWithPassword(

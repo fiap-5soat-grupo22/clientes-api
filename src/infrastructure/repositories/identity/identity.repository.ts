@@ -11,7 +11,7 @@ import {
   signInWithEmailAndPassword,
   UserCredential,
 } from 'firebase/auth';
-import { Cliente } from '../../../domain/cliente.model';
+import { Cliente } from '../../../domain/models/cliente.model';
 import { IAutenticacaoRepository } from '../../../usecases/interfaces/autenticacao.interface';
 
 @Injectable()

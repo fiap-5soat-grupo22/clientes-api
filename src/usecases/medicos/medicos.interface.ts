@@ -1,4 +1,4 @@
-import { Medico } from '../../domain/medico.model';
+import { Medico } from '../../domain/models/medico.model';
 import { IRepository } from '../../infrastructure/interfaces/repository.interface';
 
 export interface IMedicosRepository extends IRepository<Medico, string> {

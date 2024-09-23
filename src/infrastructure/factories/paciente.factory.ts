@@ -1,4 +1,4 @@
-import { Paciente } from '../../domain/paciente.model';
+import { Paciente } from '../../domain/models/paciente.model';
 import { PacienteEntity } from '../entities/paciente.entity';
 import { Injectable } from '@nestjs/common';
 import { IFactory } from '../interfaces/factory.interface';

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { Habilidade } from '../../../domain/enums/habilidade.enum';
 import { HABILIDADES_KEY } from '../../decorators/habilidades.decorators';
-import { Cliente } from '../../../domain/cliente.model';
+import { Cliente } from '../../../domain/models/cliente.model';
 import { IS_PUBLIC_KEY } from '../../decorators/acesso-publico.decorators';
 import { IdentityRepository } from '../../repositories/identity/identity.repository';
 

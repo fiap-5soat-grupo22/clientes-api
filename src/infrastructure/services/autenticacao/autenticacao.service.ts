@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { addHours } from 'date-fns';
-import { Medico } from '../../../domain/medico.model';
-import { Paciente } from '../../../domain/paciente.model';
+import { Medico } from '../../../domain/models/medico.model';
+import { Paciente } from '../../../domain/models/paciente.model';
 import { CookieConfig } from '../../../infrastructure/interfaces/cookie-config.interface';
 import { Reply } from '../../../infrastructure/interfaces/reply.interface';
 import { FastifyRequest } from 'fastify';
