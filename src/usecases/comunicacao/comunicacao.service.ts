@@ -13,14 +13,15 @@ export class ComunicacaoService {
 
   horarioReservado(consulta: Consulta): Promise<boolean> {
     const subject: string = 'Health&Med - Nova consulta agendada';
+
     const data = this.dateService.format(consulta.inicio, 'dd/MM/yyyy');
-    const horario = this.dateService.format(consulta.inicio, 'hh:mm');
+    const horario = this.dateService.format(consulta.inicio, 'HH:mm');
 
     const html: string = `
     <h3>Olá, Dr. ${consulta.medico.nome}!</h3>
     <h4>Você tem uma nova consulta marcada!<h4>
     <p>Paciente: ${consulta.paciente.nome}</p>.
-    <p>Data e horário: ${data} às ${horario}.”
+    <p>Data e horário: ${data} às ${horario}h</p>.
     `;
 
     return this.emailRepository.send({

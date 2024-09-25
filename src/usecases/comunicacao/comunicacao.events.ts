@@ -6,15 +6,12 @@ import { ComunicacaoService } from './comunicacao.service';
 
 @Injectable()
 export class ComunicacaoEvents {
-  constructor() {
-    console.info('iniciado');
-  }
+  constructor() {}
   @Inject()
   private readonly comunicacaoService: ComunicacaoService;
 
   @OnEvent(EventosHorario.Reservado, { async: false })
   handleHorarioReservadoEvent(domain: Consulta) {
-    console.info('Evento recebido');
     return this.comunicacaoService.horarioReservado(domain);
   }
 }

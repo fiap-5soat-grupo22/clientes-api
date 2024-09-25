@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { toDate, fromZonedTime, format as formatDate } from 'date-fns-tz';
+import { toDate, fromZonedTime, format as formatDate, toZonedTime } from 'date-fns-tz';
 
 @Injectable()
 export class DateService {
@@ -11,7 +11,11 @@ export class DateService {
     return fromZonedTime(new Date(), null);
   }
 
-  format(date: Date, format: string) {
-    return formatDate(date, format, { timeZone: process.env.TZ });
+  format(
+    date: Date,
+    format: string,
+    config: object = { timeZone: process.env.TZ },
+  ) {
+    return formatDate(toZonedTime(date, null), format, config);
   }
 }
