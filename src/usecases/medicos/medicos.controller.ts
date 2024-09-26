@@ -12,6 +12,7 @@ import {
   DefaultValuePipe,
   Req,
   Res,
+  Patch,
 } from '@nestjs/common';
 import { MedicosService } from './medicos.service';
 import { CreateMedicoDto } from './dto/create-medico.dto';
@@ -206,7 +207,7 @@ export class MedicosController {
   @ApiBearerAuth()
   @Habilidades(Habilidade.Medico)
   @Version('1')
-  @Post(':uid')
+  @Patch(':uid')
   updateV1(
     @Param('uid') uid: string,
     @Body() updateMedicoDto: UpdateMedicoDto,

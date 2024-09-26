@@ -22,6 +22,8 @@ export class ComunicacaoService {
     <h4>Você tem uma nova consulta marcada!<h4>
     <p>Paciente: ${consulta.paciente.nome}</p>.
     <p>Data e horário: ${data} às ${horario}h</p>.
+    <p></p>
+    <p>Código da consulta: #${consulta.uid}</p>
     `;
 
     return this.emailRepository.send({
