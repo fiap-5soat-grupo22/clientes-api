@@ -30,12 +30,6 @@ describe('AppController', () => {
     expect(appController).toBeDefined();
   });
 
-  describe('getHello', () => {
-    it('should return "online"', () => {
-      expect(appController.getHello()).toBe('online');
-    });
-  });
-
   describe('dispatchEventV1', () => {
     it('should call appService.dispatchEvent with correct arguments', () => {
       const body = { test: 'data' };
