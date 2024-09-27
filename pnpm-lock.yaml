@@ -41,6 +41,9 @@ dependencies:
   '@nestjs/platform-fastify':
     specifier: 10.3.9
     version: 10.3.9(@fastify/static@7.0.4)(@nestjs/common@10.4.3)(@nestjs/core@10.4.3)
+  '@nestjs/serve-static':
+    specifier: ^4.0.2
+    version: 4.0.2(@fastify/static@7.0.4)(@nestjs/common@10.4.3)(@nestjs/core@10.4.3)(fastify@4.27.0)
   '@nestjs/swagger':
     specifier: ^7.4.0
     version: 7.4.2(@fastify/static@7.0.4)(@nestjs/common@10.4.3)(@nestjs/core@10.4.3)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
@@ -1818,6 +1821,29 @@ packages:
     transitivePeerDependencies:
       - chokidar
     dev: true
+
+  /@nestjs/serve-static@4.0.2(@fastify/static@7.0.4)(@nestjs/common@10.4.3)(@nestjs/core@10.4.3)(fastify@4.27.0):
+    resolution: {integrity: sha512-cT0vdWN5ar7jDI2NKbhf4LcwJzU4vS5sVpMkVrHuyLcltbrz6JdGi1TfIMMatP2pNiq5Ie/uUdPSFDVaZX/URQ==}
+    peerDependencies:
+      '@fastify/static': ^6.5.0 || ^7.0.0
+      '@nestjs/common': ^9.0.0 || ^10.0.0
+      '@nestjs/core': ^9.0.0 || ^10.0.0
+      express: ^4.18.1
+      fastify: ^4.7.0
+    peerDependenciesMeta:
+      '@fastify/static':
+        optional: true
+      express:
+        optional: true
+      fastify:
+        optional: true
+    dependencies:
+      '@fastify/static': 7.0.4
+      '@nestjs/common': 10.4.3(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 10.4.3(@nestjs/common@10.4.3)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      fastify: 4.27.0
+      path-to-regexp: 0.2.5
+    dev: false
 
   /@nestjs/swagger@7.4.2(@fastify/static@7.0.4)(@nestjs/common@10.4.3)(@nestjs/core@10.4.3)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2):
     resolution: {integrity: sha512-Mu6TEn1M/owIvAx2B4DUQObQXqo2028R2s9rSZ/hJEgBK95+doTwS0DjmVA2wTeZTyVtXOoN7CsoM5pONBzvKQ==}
@@ -5899,6 +5925,10 @@ packages:
     dependencies:
       lru-cache: 10.4.3
       minipass: 7.1.2
+
+  /path-to-regexp@0.2.5:
+    resolution: {integrity: sha512-l6qtdDPIkmAmzEO6egquYDfqQGPMRNGjYtrU13HAXb3YSRrt7HSb1sJY0pKp6o2bAa86tSB6iwaW2JbthPKr7Q==}
+    dev: false
 
   /path-to-regexp@3.2.0:
     resolution: {integrity: sha512-jczvQbCUS7XmS7o+y1aEO9OBVFeZBQ1MDSEqmO7xSoPgOPoowY/SxLpZ6Vh97/8qHZOteiCKb7gkG9gA2ZUxJA==}
