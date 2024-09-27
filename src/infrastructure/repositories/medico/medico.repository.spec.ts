@@ -1,50 +1,47 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ClienteRepository } from './medico.repository';
-import { ClienteEntity } from '../../entities/cliente.entity';
+import { MedicoRepository } from './medico.repository';
 import { DataSource } from 'typeorm';
 import { getDataSourceToken } from '@nestjs/typeorm';
-import { ClienteFactory } from '../../factories/medico.factory';
+import { MedicoEntity } from '../../entities/medico.entity';
+import { MedicoFactory } from '../../factories/medico.factory';
+import { CommonsService } from '../../services/commons/commons.service';
+import { Medico } from '../../../domain/models/medico.model';
 
-describe('ClienteRepository', () => {
-  let service: ClienteRepository;
+describe('MedicoRepository', () => {
+  let service: MedicoRepository;
+  let medicoFactory: MedicoFactory;
 
-  const mockCliente: Cliente = {
+  const mockMedico: Medico = {
     uid: '66974b15529af1d850a03f19',
     identity: 'test-provider-uid',
-    tipo: TipoCliente.Colaborador,
     email: 'test@example.com',
     nome: 'Test User',
-    matricula: '12345',
-    departamento: 'Test Department',
-    centro_despesa: 'test-0000182635',
-    habilidades: ['ROLE_USER'],
-    perfis: ['PERFIL_USER'],
-    ativo: true,
+    cpf: '12345678901',
+    habilidades: [],
+    ativo: false,
+    crm: ''
   };
 
-  const mockClienteEntity: ClienteEntity = {
+  const mockMedicoEntity: MedicoEntity = {
     uid: '66974b15529af1d850a03f19',
     identity: 'test-provider-uid',
-    tipo: TipoCliente.Colaborador,
     email: 'test@example.com',
     nome: 'Test User',
-    matricula: '12345',
-    departamento: 'Test Department',
-    centro_despesa: 'test-0000182635',
-    habilidades: ['ROLE_USER'],
-    perfis: ['PERFIL_USER'],
-    ativo: true,
+    cpf: '12345678901',
+    habilidades: [],
+    ativo: false,
+    crm: ''
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const mockDataSource = (_config: object): Partial<DataSource> => ({
-    name: 'gestao_acesso',
+    name: 'clientes',
     destroy: jest.fn(),
     getMongoRepository: jest.fn().mockReturnValue({
-      create: jest.fn().mockResolvedValue(mockCliente.uid),
-      save: jest.fn().mockResolvedValue(mockClienteEntity),
-      findOne: jest.fn().mockResolvedValue(mockClienteEntity),
-      find: jest.fn().mockResolvedValue([mockClienteEntity]),
+      create: jest.fn().mockResolvedValue(mockMedico.uid),
+      save: jest.fn().mockResolvedValue(mockMedicoEntity),
+      findOne: jest.fn().mockResolvedValue(mockMedicoEntity),
+      find: jest.fn().mockResolvedValue([mockMedicoEntity]),
       updateOne: jest.fn().mockResolvedValue({
         modifiedCount: 1,
         matchedCount: 1,
@@ -55,14 +52,14 @@ describe('ClienteRepository', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ClienteRepository,
-        ClienteFactory,
+        MedicoRepository,
+        MedicoFactory,
         {
-          provide: getDataSourceToken('gestao_acesso'),
+          provide: getDataSourceToken('clientes'),
           useFactory: () =>
             mockDataSource({
               type: 'mongodb',
-              entities: [ClienteEntity],
+              entities: [MedicoEntity],
             }),
         },
         {
@@ -81,7 +78,8 @@ describe('ClienteRepository', () => {
       ],
     }).compile();
 
-    service = module.get<ClienteRepository>(ClienteRepository);
+    service = module.get<MedicoRepository>(MedicoRepository);
+    medicoFactory = module.get<MedicoFactory>(MedicoFactory);
   });
 
   it('should be defined', () => {
@@ -90,15 +88,15 @@ describe('ClienteRepository', () => {
 
   describe('create', () => {
     it('should create a new user', async () => {
-      const uid = await service.create(mockCliente);
-      expect(uid).toBe(mockCliente.uid);
+      const uid = await service.create(mockMedico);
+      expect(uid).toBe(mockMedico.uid);
     });
   });
 
   describe('findByEmail', () => {
     it('should find a user by email', async () => {
       const user = await service.findByEmail('test@example.com');
-      expect(user).toEqual(mockCliente);
+      expect(user).toEqual(mockMedico);
     });
   });
 
@@ -110,41 +108,40 @@ describe('ClienteRepository', () => {
         'uid',
         'email=test@example.com',
       );
-      expect(users).toEqual([mockCliente]);
+      expect(users).toEqual([mockMedico]);
     });
   });
 
   describe('findOne', () => {
     it('should find a user by uid', async () => {
-      const user = await service.findOne(mockCliente.uid, 'nome');
-      expect(user).toEqual(mockCliente);
+      const user = await service.findOne(mockMedico.uid, 'nome');
+      expect(user).toEqual(mockMedico);
     });
 
     it('should find a user by uid without fields asked', async () => {
-      const user = await service.findOne(mockCliente.uid, null);
-      expect(user).toEqual(mockCliente);
+      const user = await service.findOne(mockMedico.uid, null);
+      expect(user).toEqual(mockMedico);
     });
   });
 
   describe('update', () => {
     it('should update a user', async () => {
-      const result = await service.update(mockCliente.uid, mockCliente);
+      const result = await service.update(mockMedico.uid, mockMedico);
       expect(result).toBe(true);
     });
   });
 
   describe('remove', () => {
     it('should remove a user', async () => {
-      expect(service.remove('teste')).rejects.toThrow(
-        Error('Method not implemented.'),
-      );
+      // Use toThrow instead of toBe
+      await expect(service.remove('teste')).rejects.toThrow('Method not implemented.');
     });
   });
+
   describe('createWithPassword', () => {
     it('should create a user with password', async () => {
-      await expect(async () =>
-        service.createWithPassword(mockCliente, 'teste'),
-      ).rejects.toThrow(Error('Method not implemented.'));
+      await expect(service.createWithPassword(mockMedico, 'teste')).rejects.toThrow('Method not implemented.');
     });
   });
 });
+

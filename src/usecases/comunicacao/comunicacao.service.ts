@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Consulta } from '../../domain/models/consulta.model';
 import { DateService } from '../../infrastructure/services/date/date.service';
-import { EmailRepository } from '../../infrastructure/repositories/email/event.repository';
+import { EmailRepository } from '../../infrastructure/repositories/email/email.repository';
 
 @Injectable()
 export class ComunicacaoService {

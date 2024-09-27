@@ -132,7 +132,7 @@ export class PacientesService {
   ): Promise<object> {
     const header = request.headers['authorization'];
 
-    const [email, senha] = this.autenticacaoService.extractCredentials(header);
+    const [email, senha] = this.autenticacaoService.extractCredentials(header) || [];
 
     if (!email || !senha)
       throw new UnauthorizedException('Credenciais não informadas');

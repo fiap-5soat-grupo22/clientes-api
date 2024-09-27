@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
 import { APIResponse } from 'mailersend/lib/services/request.service';
 
@@ -10,13 +10,8 @@ export interface Email {
 
 @Injectable()
 export class EmailRepository {
-  private mailService: MailerSend;
-
-  constructor() {
-    this.mailService = new MailerSend({
-      apiKey: process.env.EMAIL_PROVIDER_API_KEY,
-    });
-  }
+  @Inject()
+  private readonly mailerSend: MailerSend;
 
   async send(email: Email): Promise<boolean> {
     const sentFrom = new Sender(
@@ -37,7 +32,7 @@ export class EmailRepository {
       .setHtml(email.html);
 
     const response: APIResponse =
-      await this.mailService.email.send(emailParams);
+      await this.mailerSend.email.send(emailParams);
 
     console.info('sent email response BODY', JSON.stringify(response));
 

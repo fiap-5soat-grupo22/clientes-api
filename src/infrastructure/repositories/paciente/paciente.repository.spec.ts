@@ -1,44 +1,39 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { pacienteRepository } from './medico.repository';
-import { PacienteEntity } from '../../entities/cliente.entity';
+import { PacienteRepository } from './paciente.repository';
 import { DataSource } from 'typeorm';
 import { getDataSourceToken } from '@nestjs/typeorm';
-import { PacienteFactory } from '../../factories/medico.factory';
+import { PacienteEntity } from '../../entities/paciente.entity';
+import { PacienteFactory } from '../../factories/paciente.factory';
+import { CommonsService } from '../../services/commons/commons.service';
+import { Paciente } from '../../../domain/models/paciente.model';
 
 describe('PacienteRepository', () => {
   let service: PacienteRepository;
+  let pacienteFactory: PacienteFactory;
 
   const mockPaciente: Paciente = {
     uid: '66974b15529af1d850a03f19',
     identity: 'test-provider-uid',
-    tipo: TipoPaciente.Colaborador,
     email: 'test@example.com',
     nome: 'Test User',
-    matricula: '12345',
-    departamento: 'Test Department',
-    centro_despesa: 'test-0000182635',
-    habilidades: ['ROLE_USER'],
-    perfis: ['PERFIL_USER'],
-    ativo: true,
+    cpf: '12345678901',
+    habilidades: [],
+    ativo: false
   };
 
   const mockPacienteEntity: PacienteEntity = {
     uid: '66974b15529af1d850a03f19',
     identity: 'test-provider-uid',
-    tipo: TipoPaciente.Colaborador,
     email: 'test@example.com',
     nome: 'Test User',
-    matricula: '12345',
-    departamento: 'Test Department',
-    centro_despesa: 'test-0000182635',
-    habilidades: ['ROLE_USER'],
-    perfis: ['PERFIL_USER'],
-    ativo: true,
+    cpf: '12345678901',
+    habilidades: [],
+    ativo: false
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const mockDataSource = (_config: object): Partial<DataSource> => ({
-    name: 'gestao_acesso',
+    name: 'clientes',
     destroy: jest.fn(),
     getMongoRepository: jest.fn().mockReturnValue({
       create: jest.fn().mockResolvedValue(mockPaciente.uid),
@@ -58,7 +53,7 @@ describe('PacienteRepository', () => {
         PacienteRepository,
         PacienteFactory,
         {
-          provide: getDataSourceToken('gestao_acesso'),
+          provide: getDataSourceToken('clientes'),
           useFactory: () =>
             mockDataSource({
               type: 'mongodb',
@@ -82,6 +77,7 @@ describe('PacienteRepository', () => {
     }).compile();
 
     service = module.get<PacienteRepository>(PacienteRepository);
+    pacienteFactory = module.get<PacienteFactory>(PacienteFactory);
   });
 
   it('should be defined', () => {
@@ -135,16 +131,15 @@ describe('PacienteRepository', () => {
 
   describe('remove', () => {
     it('should remove a user', async () => {
-      expect(service.remove('teste')).rejects.toThrow(
-        Error('Method not implemented.'),
-      );
+      // Use toThrow instead of toBe
+      await expect(service.remove('teste')).rejects.toThrow('Method not implemented.');
     });
   });
+
   describe('createWithPassword', () => {
     it('should create a user with password', async () => {
-      await expect(async () =>
-        service.createWithPassword(mockPaciente, 'teste'),
-      ).rejects.toThrow(Error('Method not implemented.'));
+      await expect(service.createWithPassword(mockPaciente, 'teste')).rejects.toThrow('Method not implemented.');
     });
   });
 });
+

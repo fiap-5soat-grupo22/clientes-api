@@ -26,6 +26,7 @@ COPY *.json ./
 COPY pnpm-lock.yaml .
 COPY .npmrc .
 COPY .eslintrc.js .
+COPY coverage .
 
 RUN npm install -g --quiet --no-progress pnpm @nestjs/cli
 RUN npm cache clean --force

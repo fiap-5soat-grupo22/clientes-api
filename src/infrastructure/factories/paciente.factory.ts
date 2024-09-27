@@ -5,12 +5,14 @@ import { IFactory } from '../interfaces/factory.interface';
 import { ClienteFactory } from './cliente.factory';
 
 @Injectable()
-export class PacienteFactory extends ClienteFactory implements IFactory<Paciente, PacienteEntity> {
-  
+export class PacienteFactory
+  extends ClienteFactory
+  implements IFactory<Paciente, PacienteEntity>
+{
   toEntity(domain: Paciente): PacienteEntity {
     if (!domain) return null;
 
-    const entity: PacienteEntity = {...super.toEntity(domain) };
+    const entity: PacienteEntity = { ...super.toEntity(domain) };
 
     return entity;
   }
@@ -18,7 +20,7 @@ export class PacienteFactory extends ClienteFactory implements IFactory<Paciente
   toDomain(entity: PacienteEntity): Paciente {
     if (!entity) return null;
 
-    const domain: Paciente = {...super.toDomain(entity) };
+    const domain: Paciente = { ...super.toDomain(entity) };
 
     return domain;
   }

@@ -40,7 +40,7 @@ export class PacienteRepository implements IPacientesRepository {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  createWithPassword(domain: Paciente, password: string): Promise<string> {
+  async createWithPassword(domain: Paciente, password: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
 

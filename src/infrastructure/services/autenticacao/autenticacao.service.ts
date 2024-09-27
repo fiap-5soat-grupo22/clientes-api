@@ -15,10 +15,10 @@ export class AutenticacaoService {
         'base64',
       ).toString('utf-8');
 
-      return decoded.split(':');
+      return decoded.split(':') || [null, null];
     } catch (error) {
       console.error(error);
-      return [];
+      return [null, null];
     }
   }
 

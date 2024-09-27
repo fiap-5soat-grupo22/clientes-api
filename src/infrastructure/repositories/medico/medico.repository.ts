@@ -40,7 +40,7 @@ export class MedicoRepository implements IMedicosRepository {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  createWithPassword(domain: Medico, password: string): Promise<string> {
+  async createWithPassword(domain: Medico, password: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
 
@@ -93,8 +93,6 @@ export class MedicoRepository implements IMedicosRepository {
       { $set: entity },
       { upsert: false },
     );
-
-    console.info(resultado);
 
     return resultado.modifiedCount == 1 && resultado.matchedCount == 1;
   }

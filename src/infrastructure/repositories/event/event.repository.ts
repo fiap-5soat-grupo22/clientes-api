@@ -7,7 +7,8 @@ export class EventRepository {
   @Inject()
   private readonly eventEmitter: EventEmitter2;
 
-  pubSubClient: PubSub = new PubSub();
+  @Inject()
+  private readonly pubsub: PubSub;
 
   async publish(
     topic: string,
@@ -15,7 +16,7 @@ export class EventRepository {
     data: object,
     once: boolean = true,
   ): Promise<void> {
-    const messageId = await this.pubSubClient.topic(topic).publishMessage({
+    const messageId = await this.pubsub.topic(topic).publishMessage({
       attributes: {
         domain: 'clientes',
         event: event,

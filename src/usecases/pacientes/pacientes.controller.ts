@@ -33,6 +33,7 @@ import { Habilidades } from '../../infrastructure/decorators/habilidades.decorat
 import { IdentityGuard } from '../../infrastructure/guards/identity/identity.guard';
 import { FastifyRequest } from 'fastify';
 import { Reply } from '../../infrastructure/interfaces/reply.interface';
+import { MedicosService } from '../medicos/medicos.service';
 
 @Controller('pacientes')
 @ApiTags('Pacientes')
@@ -40,7 +41,7 @@ import { Reply } from '../../infrastructure/interfaces/reply.interface';
 export class PacientesController {
   @Inject()
   private readonly pacientesService: PacientesService;
-  medicosService: any;
+  medicosService: MedicosService;
 
   @ApiOperation({ description: 'Cadastra um novo paciente' })
   @ApiResponse({

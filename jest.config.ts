@@ -4,8 +4,8 @@ const config: Config.InitialOptions = {
   verbose: false,
   silent: false,
   collectCoverageFrom: [
+    'src/usecases/pacientes/*.controller.ts',
     'src/usecases/*/*.service.ts',
-    'src/usecases/*/*.controller.ts',
     'src/infrastructure/repositories/*/*.repository.ts',
   ],
   testPathIgnorePatterns: [],
