@@ -12,15 +12,10 @@ import { EventRepository } from './infrastructure/repositories/event/event.repos
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ComunicacaoModule } from './usecases/comunicacao/comunicacao.module';
 import { PubSub } from '@google-cloud/pubsub';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 console.info(join(__dirname.replaceAll('\\src', ''), 'coverage', 'lcov-report'))
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      renderPath: '/coverage',
-      rootPath: join(__dirname.replaceAll('\\src', ''), '..', 'coverage', 'lcov-report'),
-    }),
     TypeOrmModule.forRoot({
       type: 'mongodb',
       name: 'clientes',
