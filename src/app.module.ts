@@ -11,6 +11,7 @@ import { AutenticacaoService } from './infrastructure/services/autenticacao/aute
 import { EventRepository } from './infrastructure/repositories/event/event.repository';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ComunicacaoModule } from './usecases/comunicacao/comunicacao.module';
+import { PubSub } from '@google-cloud/pubsub';
 
 @Module({
   imports: [
@@ -44,6 +45,6 @@ import { ComunicacaoModule } from './usecases/comunicacao/comunicacao.module';
     EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService, AutenticacaoService, EventRepository],
+  providers: [AppService, AutenticacaoService, EventRepository, PubSub],
 })
 export class AppModule {}
