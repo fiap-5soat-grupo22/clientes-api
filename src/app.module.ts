@@ -12,8 +12,6 @@ import { EventRepository } from './infrastructure/repositories/event/event.repos
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ComunicacaoModule } from './usecases/comunicacao/comunicacao.module';
 import { PubSub } from '@google-cloud/pubsub';
-import { join } from 'path';
-console.info(join(__dirname.replaceAll('\\src', ''), 'coverage', 'lcov-report'))
 @Module({
   imports: [
     TypeOrmModule.forRoot({
