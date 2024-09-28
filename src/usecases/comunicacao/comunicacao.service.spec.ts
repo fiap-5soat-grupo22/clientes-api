@@ -3,6 +3,11 @@ import { ComunicacaoService } from './comunicacao.service';
 import { DateService } from '../../infrastructure/services/date/date.service';
 import { EmailRepository } from '../../infrastructure/repositories/email/email.repository';
 import { Consulta } from '../../domain/models/consulta.model';
+import { PacienteRepository } from '../../infrastructure/repositories/paciente/paciente.repository';
+import { MedicoRepository } from '../../infrastructure/repositories/medico/medico.repository';
+import { MedicoFactory } from '../../infrastructure/factories/medico.factory';
+import { PacienteFactory } from '../../infrastructure/factories/paciente.factory';
+import { CommonsService } from '../../infrastructure/services/commons/commons.service';
 
 describe('ComunicacaoService', () => {
   let comunicacaoService: ComunicacaoService;
@@ -13,6 +18,26 @@ describe('ComunicacaoService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ComunicacaoService,
+        MedicoRepository,
+        {
+          provide: MedicoRepository,
+          useValue: {
+            findOne: jest.fn().mockReturnValue({
+              nome: 'Dr. Fulano',
+              email: 'dr.fulano@email.com',
+            }),
+          },
+        },
+        {
+          provide: PacienteRepository,
+          useValue: {
+            findOne: jest.fn().mockReturnValue({
+              nome: 'Ciclano',
+              email: 'fulano@email.com',
+            }),
+          },
+        },
+        PacienteFactory,
         {
           provide: DateService,
           useValue: {
