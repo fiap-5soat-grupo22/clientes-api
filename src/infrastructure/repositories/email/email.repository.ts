@@ -21,11 +21,8 @@ export class EmailRepository {
 
     const recipients = [new Recipient(email.to)];
 
-    const bcc = [new Recipient('dcleme17@gmail.com')];
-
     const emailParams = new EmailParams()
       .setFrom(sentFrom)
-      .setCc(bcc)
       .setTo(recipients)
       .setReplyTo(sentFrom)
       .setSubject(email.subject)
