@@ -58,6 +58,25 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
+# Swagger – Pacientes/Médicos
+
+https://clientes-api-91827266597.southamerica-east1.run.app/docs#/
+
+ Algumas dicas:
+👉 As operações POST /v1/medicos e POST /v1/pacientes não necessitam de autenticação.
+
+👉 As operações POST /v1/medicos/oauth2/access-token e POST /v1/pacientes/oauth2/access-token utilizam o tipo de autenticação Basic (email e senha).
+
+Rodar o post /v1/medicos para inclusão de um novo médico ou /v1/pacientes para inclusão de um novo paciente no banco de dados:
+
+Ir no botão Authorize,  incluir o email/senha nos campos: basic (Username/Passcode).
+
+👉 As demais operações necessitam de um Access Token
+
+Rodar a api post /v1/medicos/oauth2/access-token ou POST /v1/pacientes/oauth2/access-token para gerar o token e incluir no campo bearer do botão Authorize.
+
+Após a inclusão, as demais apis podem ser executadas
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
